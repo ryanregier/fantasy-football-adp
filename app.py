@@ -2,6 +2,7 @@ import pandas as pd
 import requests
 import plotly
 import json
+import time
 
 def fetch_espn_players(limit=50, start_offset=0, cookies=None):
     espn_url = "https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/2025/segments/0/leaguedefaults/3?view=kona_player_info"
