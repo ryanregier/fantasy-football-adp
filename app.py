@@ -109,7 +109,7 @@ def generate_dataframe():
     df_sleeper = df_sleeper.dropna(subset=["SLEEPER_ADP_PPR"])
     print("Generated sleeper")
     
-    data = fetch_players()
+    data = fetch_espn_players()
     df_espn = pd.DataFrame(data)
     df_espn['ESPN_PPR_ADP'] = df_espn['player'].apply(lambda x: unpack_espn_adp(x))
     df_espn['Player'] = df_espn['player'].apply(lambda x: f"{x.get('firstName')} {x.get('lastName')}")
@@ -151,7 +151,7 @@ app = Dash(__name__)
 # Layout
 app.layout = html.Div([
     html.H2("Fantasy Football ADP Comparison"),
-    
+    html.H3("Auto-refreshing Table (every hour)"),
     dash_table.DataTable(
         id="table",
         columns=[{"name": col, "id": col} for col in df.columns],
@@ -171,9 +171,24 @@ app.layout = html.Div([
             "backgroundColor": "lightgrey",
             "fontWeight": "bold"
         }
+    ),
+     # Interval component → triggers every hour (3600 seconds)
+    dcc.Interval(
+        id="interval-refresh",
+        interval=3600*1000,   # 3600 sec = 1 hour, multiply by 1000 for ms
+        n_intervals=0
     )
 ])
 
+# Callback to refresh table
+@app.callback(
+    Output("table", "data"),
+    Input("interval-refresh", "n_intervals")
+)
+def update_table(n):
+    df = generate_dataframe()
+    return df.to_dict("records")
+    
 if __name__ == "__main__":
     app.run_server(debug=True)
 	
