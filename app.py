@@ -4,6 +4,7 @@ import plotly
 import json
 import time
 
+
 def unpack_espn_adp(temp):
     try:
         return float(temp['draftRanksByRankType']['PPR']['rank'])
@@ -144,7 +145,7 @@ def generate_dataframe():
     return df_merged
 
 import dash
-from dash import Dash, dash_table, html
+from dash import Dash, dash_table, html, dcc, Output, Input
 import pandas as pd
 
 
