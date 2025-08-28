@@ -4,6 +4,12 @@ import plotly
 import json
 import time
 
+def unpack_espn_adp(temp):
+    try:
+        return float(temp['draftRanksByRankType']['PPR']['rank'])
+    except Exception as e:
+        return None
+        
 def fetch_espn_players(limit=50, start_offset=0, cookies=None):
     espn_url = "https://lm-api-reads.fantasy.espn.com/apis/v3/games/ffl/seasons/2025/segments/0/leaguedefaults/3?view=kona_player_info"
     print("Fetching ESPN ADPs")
